@@ -17,7 +17,7 @@ module.exports = {
     book: {
         assets: './assets',
         js: [
-            'lunr.min.js', 'search-lunr.js'
+            'pouchdb.min.js', 'pouchdb.load.min.js', 'search-jieba.js'
         ]
     },
 
@@ -57,21 +57,19 @@ module.exports = {
             function insertData(word) {
                 word = word.toUpperCase();
 
-                return db.upsert('word__' + word, function (doc) {
-                    if (!doc.urls) {
-                        doc.urls = [];
+                return db.upsert('word__' + word, function (newdoc) {
+                    if (!newdoc.urls) {
+                        newdoc.urls = [];
                     }
-                    doc.urls = _.union(doc.urls, [url]);
+                    newdoc.urls = _.union(newdoc.urls, [url]);
 
-                    return doc;
+                    return newdoc;
                 }).then(function() {
                     // Insert new doc
-                    return db.putIfNotExists(
-                        {
-                            _id: 'doc__' + doc.url,
-                            doc: doc
-                        }
-                    );
+                    return db.upsert('doc__' + doc.url, function (newdoc) {
+                        newdoc.doc = doc;
+                        return newdoc;
+                    });
                 });
             }
 

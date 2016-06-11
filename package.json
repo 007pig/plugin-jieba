@@ -11,6 +11,7 @@
     "lodash": "^4.13.1",
     "nodejieba": "^2.0.0",
     "pouchdb": "^5.4.1",
+    "pouchdb-load": "^1.4.5",
     "pouchdb-replication-stream": "^1.2.6",
     "pouchdb-upsert": "^2.0.0"
   },
@@ -34,8 +35,5 @@
   },
   "scripts": {},
   "devDependencies": {
-    "gulp": "^3.9.1",
-    "gulp-browser": "^2.1.9",
-    "gulp-clean": "^0.3.2"
   }
 }
