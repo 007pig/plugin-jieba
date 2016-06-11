@@ -20,6 +20,8 @@
 }
 ```
 
+然后在书籍目录运行 ```gitbook install```。如果遇到 Error: spawn E2BIG，则再运行 ```npm rebuild```。
+
 ### 禁止某个页面索引
 
 如果您不想让某个页面被搜索到，可以在该页面添加 YAML 头：

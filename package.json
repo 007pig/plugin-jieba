@@ -1,6 +1,6 @@
 {
   "name": "gitbook-plugin-search-jieba",
-  "description": "Index book in a lunr index accessible from the search plugin",
+  "description": "Gitbook 中文搜索插件",
   "main": "index.js",
   "version": "1.0.0",
   "engines": {
