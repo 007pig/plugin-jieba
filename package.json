@@ -2,7 +2,7 @@
   "name": "gitbook-plugin-search-jieba",
   "description": "Gitbook 中文搜索插件",
   "main": "index.js",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "engines": {
     "gitbook": ">=3.0.0-pre.0"
   },
@@ -13,7 +13,8 @@
     "pouchdb": "^5.4.1",
     "pouchdb-load": "^1.4.5",
     "pouchdb-replication-stream": "^1.2.6",
-    "pouchdb-upsert": "^2.0.0"
+    "pouchdb-upsert": "^2.0.0",
+    "rimraf": "^2.5.2"
   },
   "homepage": "https://github.com/007pig/plugin-jieba",
   "repository": {

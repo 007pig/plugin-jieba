@@ -79,26 +79,11 @@ window.require([
             );
         });
 
-        // if (this.index) {
-        //     results = $.map(this.index.search(q), function(result) {
-        //         var doc = that.store[result.ref];
-        //
-        //         return {
-        //             title: doc.title,
-        //             url: doc.url,
-        //             body: doc.summary || doc.body
-        //         };
-        //     });
-        // }
-
         return d.promise();
     };
 
     // Set gitbook research
     gitbook.events.bind('start', function(e, config) {
-        // var engine = gitbook.search.getEngine();
-        // if (!engine) {
         gitbook.search.setEngine(JiebaSearchEngine, config);
-        // }
     });
 });
