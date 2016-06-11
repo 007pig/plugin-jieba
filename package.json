@@ -2,7 +2,7 @@
   "name": "gitbook-plugin-search-jieba",
   "description": "Gitbook 中文搜索插件",
   "main": "index.js",
-  "version": "1.1.1",
+  "version": "1.0.1",
   "engines": {
     "gitbook": ">=3.0.0-pre.0"
   },
