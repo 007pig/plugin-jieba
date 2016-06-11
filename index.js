@@ -1,18 +1,17 @@
-var lunr = require('lunr');
+var nodejieba = require("nodejieba");
 
-// Create search index
-var searchIndex = lunr(function () {
-    this.ref('url');
+var PouchDB = require('pouchdb');
+var replicationStream = require('pouchdb-replication-stream');
+PouchDB.debug.enable('*');
+PouchDB.plugin(replicationStream.plugin);
+PouchDB.adapter('writableStream', replicationStream.adapters.writableStream);
+PouchDB.plugin(require('pouchdb-upsert'));
 
-    this.field('title', { boost: 10 });
-    this.field('body');
-});
+var _ = require('lodash');
+var path = require('path');
+var fs = require('fs');
 
-// Map of Lunr ref to document
-var documentsStore = {};
-
-var searchIndexEnabled = true;
-var indexSize = 0;
+var db = new PouchDB('searchindex');
 
 module.exports = {
     book: {
@@ -23,26 +22,23 @@ module.exports = {
     },
 
     hooks: {
+        'init': function () {
+            // return db.destroy();
+        },
+
         // Index each page
         'page': function(page) {
-            if (this.output.name != 'website' || !searchIndexEnabled || page.search === false) {
+            if (this.output.name != 'website' || page.search === false) {
                 return page;
             }
 
-            var text, maxIndexSize;
-            maxIndexSize = this.config.get('pluginsConfig.search.maxIndexSize') || this.config.get('search.maxIndexSize');
+            var text;
+            var url = this.output.toURL(page.path);
 
             this.log.debug.ln('index page', page.path);
 
             // Transform as TEXT
             text = page.content.replace(/(<([^>]+)>)/ig, '');
-
-            indexSize = indexSize + text.length;
-            if (indexSize > maxIndexSize) {
-                this.log.warn.ln('search index is too big, indexing is now disabled');
-                searchIndexEnabled = false;
-                return page;
-            }
 
             // Add to index
             var doc = {
@@ -52,21 +48,52 @@ module.exports = {
                 body: text
             };
 
-            documentsStore[doc.url] = doc;
-            searchIndex.add(doc);
+            // 分词
+            var words = _.uniq(nodejieba.cutForSearch(page.title + text, true));
 
-            return page;
+            // 移除空格和 \n
+            _.pull(words, ' ', '\n');
+
+            function insertData(word) {
+                console.log(word);
+                word = word.toUpperCase();
+
+                return db.upsert('word__' + word, function (doc) {
+                    if (!doc.urls) {
+                        doc.urls = [];
+                    }
+                    doc.urls = _.union(doc.urls, [url]);
+
+                    return doc;
+                }).then(function() {
+                    // Insert new doc
+                    return db.putIfNotExists(
+                        {
+                            _id: 'doc__' + doc.url,
+                            doc: doc
+                        }
+                    );
+                });
+            }
+
+            return Promise.all(words.map(insertData)).then(function () {
+                return page;
+            });
+
         },
 
         // Write index to disk
         'finish': function() {
             if (this.output.name != 'website') return;
 
-            this.log.debug.ln('write search index');
-            return this.output.writeFile('search_index.json', JSON.stringify({
-                index: searchIndex,
-                store: documentsStore
-            }));
+            var file_path = path.resolve(this.output.root(), 'search_jieba_index.dat');
+
+            var ws = fs.createWriteStream(file_path);
+
+            // dump db for browser to load
+            return db.dump(ws).catch(function (err) {
+                console.log(err);
+            });
         }
     }
 };

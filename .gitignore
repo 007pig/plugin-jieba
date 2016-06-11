@@ -28,3 +28,5 @@ node_modules
 *.swp
 
 assets/lunr.min.js
+
+.idea/
