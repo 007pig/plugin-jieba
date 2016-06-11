@@ -1,46 +1,36 @@
-# lunr
+# Gitbook 的中文搜索引擎
 
-This plugin provides a backend for the [search](https://github.com/GitbookIO/plugin-search) plugin.
+本插件是 Gitbook 自带的 [search](https://github.com/GitbookIO/plugin-search) 搜索插件的中文搜索后端引擎。 
 
-This plugin is a default plugin.
+插件的原理是在 Gitbook build 时通过 nodejieba 将文章进行中文分词，并储存在 pouchdb 数据库中。在 Gitbook
+加载时会将 pouchdb 的数据载入到浏览器的 IndexedDB 中，以便快速搜索。
 
-### Disable this plugin
+本插件是在 [lunr](https://github.com/GitbookIO/plugin-lunr) 的基础上修改而来。
 
-This is a default plugin and it can be disabled using a `book.json` configuration:
+### 使用方法
 
-```js
-{
-    "plugins": ["-lunr"]
-}
-```
-
-### Limitations
-
-Lunr can't index a huge book, by default the index size is limited at ~100ko.
-
-You can change this limit by settings the configuration `maxIndexSize`:
+在 `book.json` 中配置：
 
 ```js
 {
-    "pluginsConfig": {
-        "lunr": {
-            "maxIndexSize": 200000
-        }
-    }
+    "plugins": [
+        "-lunr",
+        "search-jieba"
+    ]
 }
 ```
 
-### Disable indexing of a page
+### 禁止某个页面索引
 
-You can disable the indexing of a specific page by adding a YAML header to the page:
+如果您不想让某个页面被搜索到，可以在该页面添加 YAML 头：
 
 ```md
 ---
 search: false
 ---
 
-# My Page
+# 不索引页面
 
-This page is not indexed in Lunr.
+此页面不会被 jieba 索引。
 ```
 
