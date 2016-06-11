@@ -35,7 +35,7 @@ window.require([
         this.db.allDocs(
             {
                 include_docs: true,
-                keys: $.map(q.split(' '), function (val) {
+                keys: $.map(q.toUpperCase().split(' '), function (val) {
                     if (val.length == 0) {
                         return null;
                     }
@@ -43,12 +43,12 @@ window.require([
                 })
             }
         ).then(function (result) {
-            return $.map(result.rows, function (row) {
+            return $.unique($.map(result.rows, function (row) {
                 if (row.doc) {
                     // the row contains the query word
                     return row.doc.urls;
                 }
-            });
+            }));
         }).then(function (urls) {
             return that.db.allDocs(
                 {

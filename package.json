@@ -33,7 +33,9 @@
       }
     }
   },
-  "scripts": {},
+  "scripts": {
+    "prepublish": "cp node_modules/pouchdb/dist/pouchdb.min.js ./assets/pouchdb.min.js && cp node_modules/pouchdb-load/dist/pouchdb.load.min.js ./assets/pouchdb.load.min.js"
+  },
   "devDependencies": {
   }
 }
