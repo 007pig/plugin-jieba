@@ -2,7 +2,7 @@
   "name": "gitbook-plugin-search-jieba",
   "description": "Gitbook 中文搜索插件",
   "main": "index.js",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "engines": {
     "gitbook": ">=3.0.0-pre.0"
   },
@@ -25,12 +25,10 @@
     "url": "https://github.com/007pig/plugin-jieba/issues"
   },
   "gitbook": {
-    "properties": {
-    }
+    "properties": {}
   },
   "scripts": {
     "prepublish": "cp node_modules/pouchdb/dist/pouchdb.min.js ./assets/pouchdb.min.js && cp node_modules/pouchdb-load/dist/pouchdb.load.min.js ./assets/pouchdb.load.min.js"
   },
-  "devDependencies": {
-  }
+  "devDependencies": {}
 }
