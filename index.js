@@ -55,7 +55,6 @@ module.exports = {
             _.pull(words, ' ', '\n');
 
             function insertData(word) {
-                console.log(word);
                 word = word.toUpperCase();
 
                 return db.upsert('word__' + word, function (doc) {

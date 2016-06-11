@@ -1,23 +1,27 @@
 {
-  "name": "gitbook-plugin-lunr",
+  "name": "gitbook-plugin-search-jieba",
   "description": "Index book in a lunr index accessible from the search plugin",
   "main": "index.js",
-  "version": "1.1.0",
+  "version": "1.0.0",
   "engines": {
     "gitbook": ">=3.0.0-pre.0"
   },
   "dependencies": {
-    "lunr": "0.5.12",
-    "gitbook-plugin-search": "*"
+    "gitbook-plugin-search": "*",
+    "lodash": "^4.13.1",
+    "nodejieba": "^2.0.0",
+    "pouchdb": "^5.4.1",
+    "pouchdb-replication-stream": "^1.2.6",
+    "pouchdb-upsert": "^2.0.0"
   },
-  "homepage": "https://github.com/GitbookIO/plugin-lunr",
+  "homepage": "https://github.com/007pig/plugin-jieba",
   "repository": {
     "type": "git",
-    "url": "https://github.com/GitbookIO/plugin-lunr.git"
+    "url": "https://github.com/007pig/plugin-jieba.git"
   },
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/GitbookIO/plugin-lunr/issues"
+    "url": "https://github.com/007pig/plugin-jieba/issues"
   },
   "gitbook": {
     "properties": {
@@ -28,7 +32,10 @@
       }
     }
   },
-  "scripts": {
-    "prepublish": "cp node_modules/lunr/lunr.min.js ./assets/lunr.min.js"
+  "scripts": {},
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-browser": "^2.1.9",
+    "gulp-clean": "^0.3.2"
   }
 }
