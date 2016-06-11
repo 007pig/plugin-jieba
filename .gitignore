@@ -30,3 +30,6 @@ node_modules
 assets/lunr.min.js
 
 .idea/
+
+assets/pouchdb.load.min.js
+assets/pouchdb.min.js
