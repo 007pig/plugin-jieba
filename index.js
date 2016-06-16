@@ -10,6 +10,8 @@ PouchDB.plugin(require('pouchdb-upsert'));
 var _ = require('lodash');
 var path = require('path');
 var fs = require('fs');
+// var Promise = require("bluebird");
+// Promise.longStackTraces();
 
 var rimraf = require('rimraf');
 
@@ -34,7 +36,7 @@ module.exports = {
                 return page;
             }
 
-            var text;
+            var text, that = this;
             var url = this.output.toURL(page.path);
 
             this.log.debug.ln('index page', page.path);
@@ -53,8 +55,8 @@ module.exports = {
             // 分词
             var words = _.uniq(nodejieba.cutForSearch(page.title + text, true));
 
-            // 移除空格和 \n
-            _.pull(words, ' ', '\n');
+            // 移除特殊字符和标点符号
+            _.pull(words, ' ', '\n', '(', ')', '.', '-', '（', '）', '　', '：', ':', '，', '。', '—', '？', '[', ']');
 
             function insertData(word) {
                 word = word.toUpperCase();
@@ -67,17 +69,22 @@ module.exports = {
 
                     return newdoc;
                 }).then(function() {
-                    // Insert new doc
-                    return db.upsert('doc__' + doc.url, function (newdoc) {
-                        newdoc.doc = doc;
-                        return newdoc;
-                    });
+
                 });
             }
 
-            return Promise.all(words.map(insertData)).then(function () {
-                return page;
-            });
+            return Promise.all(words.map(insertData))
+                .then(function () {
+                    // Insert new doc
+                    return db.upsert('doc__' + doc.url, function (newdoc) {
+                        newdoc.doc = doc;
+
+                        return newdoc;
+                    });
+                })
+                .then(function () {
+                    return page;
+                });
 
         },
 
